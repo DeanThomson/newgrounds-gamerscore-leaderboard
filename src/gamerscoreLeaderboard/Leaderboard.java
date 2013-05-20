@@ -6,6 +6,8 @@ import java.awt.datatransfer.StringSelection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A model of the leaderboard.
@@ -157,10 +159,19 @@ public class Leaderboard {
      * @return An ArrayList of the names of the failed users.
      */
     public ArrayList<String> update() {
-        LeaderboardUpdater updater = new LeaderboardUpdater(leaderboard);
-        leaderboard = updater.run();
-        ArrayList<String> failedUsers = updater.getFailedUsers();
-        sort();
-        return failedUsers;
+        try {
+            //LeaderboardUpdater updater = new LeaderboardUpdater(leaderboard);
+            //leaderboard = updater.run();
+            //ArrayList<String> failedUsers = updater.getFailedUsers();
+            LeaderboardUpdater updater = new LeaderboardUpdater(leaderboard);
+            updater.start();
+            updater.join();
+            sort();
+            return updater.getFailedUsers();
+        } 
+        catch (InterruptedException ex) {
+            Logger.getLogger(Leaderboard.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 }

@@ -44,6 +44,7 @@ public class UserInterface extends javax.swing.JFrame {
         lblInfo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Newgrounds Gamerscore Leaderboard");
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Results"));
         jPanel1.setName(""); // NOI18N
@@ -199,8 +200,6 @@ public class UserInterface extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanel1.getAccessibleContext().setAccessibleName("Results");
-
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
@@ -270,8 +269,33 @@ public class UserInterface extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSettingsActionPerformed
 
     private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
-        leaderboard.update();
-        updateTable();        
+        Thread thread = new Thread(new Runnable() {
+            
+            @Override
+            public void run() {
+                btnAdd.setEnabled(false);
+                btnEdit.setEnabled(false);
+                btnDelete.setEnabled(false);
+                btnLoad.setEnabled(false);
+                btnSave.setEnabled(false);
+                btnCopy.setEnabled(false);
+                btnSettings.setEnabled(false);
+               
+                progressBar.setIndeterminate(true);
+                leaderboard.update();
+                progressBar.setIndeterminate(false);
+                updateTable();
+                
+                btnAdd.setEnabled(true);
+                btnEdit.setEnabled(true);
+                btnDelete.setEnabled(true);
+                btnLoad.setEnabled(true);
+                btnSave.setEnabled(true);
+                btnCopy.setEnabled(true);
+                btnSettings.setEnabled(true);
+            }
+        }); 
+        thread.start();
     }//GEN-LAST:event_btnStartActionPerformed
     
     private void updateTable() {

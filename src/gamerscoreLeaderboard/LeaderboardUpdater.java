@@ -9,7 +9,7 @@ import org.jsoup.nodes.Document;
  * Class for updating a leaderboard by fetching the users gamerscore from the web.
  * @author Dean Thomson [deanthomson92@gmail.com]
  */
-public class LeaderboardUpdater {
+public class LeaderboardUpdater extends Thread {
 
     private ArrayList<User> leaderboard = null;
     private ArrayList<String> failedUsers;
@@ -22,7 +22,8 @@ public class LeaderboardUpdater {
      * Starts the update process.
      * @return The updated leaderboard.
      */
-    public ArrayList<User> run() {
+    @Override
+    public void run() {
         Document doc;
         for (User user : leaderboard) {
             try {
@@ -34,7 +35,6 @@ public class LeaderboardUpdater {
                 failedUsers.add(user.getName());
             }
         }
-        return leaderboard;
     }
 
     /**
@@ -44,4 +44,9 @@ public class LeaderboardUpdater {
     public ArrayList<String> getFailedUsers() {
         return failedUsers;
     }
+    
+    public ArrayList<User> getUpdatedLeaderboard() {
+        return leaderboard;
+    }
+    
 }

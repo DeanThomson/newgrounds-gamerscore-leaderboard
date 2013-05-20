@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 public class Leaderboard {
     
     private ArrayList<User> leaderboard;
+    public float progress = 0;
     
     public Leaderboard() {
         leaderboard = new ArrayList();
@@ -160,11 +161,11 @@ public class Leaderboard {
      */
     public ArrayList<String> update() {
         try {
-            //LeaderboardUpdater updater = new LeaderboardUpdater(leaderboard);
-            //leaderboard = updater.run();
-            //ArrayList<String> failedUsers = updater.getFailedUsers();
             LeaderboardUpdater updater = new LeaderboardUpdater(leaderboard);
             updater.start();
+            while(updater.isAlive()) {
+                progress = updater.getUpdateProgress();
+            }
             updater.join();
             sort();
             return updater.getFailedUsers();

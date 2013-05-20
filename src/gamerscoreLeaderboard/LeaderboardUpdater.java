@@ -13,6 +13,7 @@ public class LeaderboardUpdater extends Thread {
 
     private ArrayList<User> leaderboard = null;
     private ArrayList<String> failedUsers;
+    private float progress = 0;
 
     public LeaderboardUpdater(ArrayList<User> leaderboard) {
         this.leaderboard = leaderboard;
@@ -34,6 +35,7 @@ public class LeaderboardUpdater extends Thread {
             } catch (IOException e) {
                 failedUsers.add(user.getName());
             }
+            progress++;
         }
     }
 
@@ -45,8 +47,20 @@ public class LeaderboardUpdater extends Thread {
         return failedUsers;
     }
     
+    /**
+     * Used to return the updated leaderboard.
+     * @return The updated leaderboard.
+     */
     public ArrayList<User> getUpdatedLeaderboard() {
         return leaderboard;
+    }
+    
+    /**
+     * Used to return the current progress as a percentage.
+     * @return The updates progress as a percentage.
+     */
+    public float getUpdateProgress() {
+        return (progress / leaderboard.size()) * 100;
     }
     
 }

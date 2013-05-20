@@ -269,8 +269,11 @@ public class UserInterface extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSettingsActionPerformed
 
     private void btnStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStartActionPerformed
-        Thread thread = new Thread(new Runnable() {
-            
+        
+        /**
+         * Thread for updating the leaderboard.
+         */
+        final Thread update = new Thread(new Runnable() {
             @Override
             public void run() {
                 btnAdd.setEnabled(false);
@@ -280,10 +283,11 @@ public class UserInterface extends javax.swing.JFrame {
                 btnSave.setEnabled(false);
                 btnCopy.setEnabled(false);
                 btnSettings.setEnabled(false);
+                btnStart.setEnabled(false);
                
-                progressBar.setIndeterminate(true);
+                progressBar.setMaximum(100);
+                progressBar.setMinimum(0);
                 leaderboard.update();
-                progressBar.setIndeterminate(false);
                 updateTable();
                 
                 btnAdd.setEnabled(true);
@@ -293,11 +297,30 @@ public class UserInterface extends javax.swing.JFrame {
                 btnSave.setEnabled(true);
                 btnCopy.setEnabled(true);
                 btnSettings.setEnabled(true);
+                btnStart.setEnabled(true);
             }
-        }); 
-        thread.start();
+        });
+        
+        /**
+         * Thread for updating the progress bar.
+         */
+        Thread progress = new Thread(new Runnable() {
+           @Override
+           public void run() {
+               while(update.isAlive()) {
+                   progressBar.setValue((int) leaderboard.progress);
+               }
+               progressBar.setValue(0);
+           }
+        });
+        
+        update.start();
+        progress.start();
     }//GEN-LAST:event_btnStartActionPerformed
     
+    /**
+     * Empties the JTable and refills it with the current leaderboard.
+     */
     private void updateTable() {
         ArrayList<User> users = leaderboard.getLeaderboard();
         DefaultTableModel table = (DefaultTableModel) tblLeaderboard.getModel();
